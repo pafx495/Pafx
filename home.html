@@ -1,105 +1,126 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>PAF X</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>PAF X</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      background: #0b0b0b;
-      color: #fff;
-      font-family: system-ui, -apple-system;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+<style>
+body{
+  margin:0;
+  background:#0b0b0b;
+  font-family:system-ui,-apple-system;
+  color:#fff;
+}
 
-    /* Top bar */
-    .topbar {
-      height: 56px;
-      background: #141414;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 14px;
-      box-sizing: border-box;
-      border-bottom: 1px solid #1f1f1f;
-    }
+/* HEADER */
+.header{
+  height:56px;
+  background:#141414;
+  display:flex;
+  align-items:center;
+  padding:0 16px;
+  border-bottom:1px solid #1f1f1f;
+}
+.header img{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  margin-right:10px;
+}
+.header h1{
+  font-size:18px;
+  margin:0;
+}
 
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+/* LIST */
+.chat-list{
+  padding:8px 0;
+}
 
-    .topbar img {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-    }
+.chat{
+  display:flex;
+  padding:12px 16px;
+  align-items:center;
+  cursor:pointer;
+}
+.chat:hover{
+  background:#1a1a1a;
+}
 
-    .app-name {
-      font-size: 18px;
-      font-weight: 600;
-    }
+.avatar{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  object-fit:cover;
+  margin-right:12px;
+}
 
-    /* Content */
-    .content {
-      flex: 1;
-      padding: 20px;
-      box-sizing: border-box;
-    }
+.chat-info{
+  flex:1;
+  border-bottom:1px solid #1f1f1f;
+  padding-bottom:10px;
+}
 
-    .empty {
-      text-align: center;
-      margin-top: 80px;
-      color: #aaa;
-    }
+.top-row{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:4px;
+}
 
-    .empty h3 {
-      color: #fff;
-      margin-bottom: 8px;
-    }
+.name{
+  font-weight:600;
+}
 
-    /* Floating button */
-    .fab {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: #e50914;
-      color: #fff;
-      border: none;
-      font-size: 26px;
-      cursor: pointer;
-    }
-  </style>
+.time{
+  font-size:12px;
+  color:#aaa;
+}
+
+.last-message{
+  font-size:14px;
+  color:#aaa;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+</style>
 </head>
 
 <body>
 
-  <!-- TOP BAR -->
-  <div class="topbar">
-    <div class="topbar-left">
-      <img src="logo.png" alt="PAF X">
-      <div class="app-name">PAF X</div>
+<!-- HEADER -->
+<div class="header">
+  <img src="logo.png">
+  <h1>PAF X</h1>
+</div>
+
+<!-- CHATS -->
+<div class="chat-list">
+
+  <div class="chat">
+    <img class="avatar" src="https://i.pravatar.cc/150?img=32">
+    <div class="chat-info">
+      <div class="top-row">
+        <div class="name">Mère Annette</div>
+        <div class="time">07:59</div>
+      </div>
+      <div class="last-message">Voici le lien...</div>
     </div>
   </div>
 
-  <!-- CONTENT -->
-  <div class="content">
-    <div class="empty">
-      <h3>Aucune discussion</h3>
-      <p>Commencez une nouvelle conversation</p>
+  <div class="chat">
+    <img class="avatar" src="https://i.pravatar.cc/150?img=47">
+    <div class="chat-info">
+      <div class="top-row">
+        <div class="name">Kevine 🔥</div>
+        <div class="time">07:54</div>
+      </div>
+      <div class="last-message">Accès au film GENESIS</div>
     </div>
   </div>
 
-  <!-- NEW CHAT BUTTON -->
-  <button class="fab">+</button>
+</div>
 
 </body>
 </html>
