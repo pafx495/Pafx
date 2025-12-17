@@ -4,48 +4,103 @@
   <meta charset="UTF-8">
   <title>Inscription – PAF X</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      background: #0b0b0b;
+      color: #fff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 360px;
+      background: #141414;
+      border-radius: 20px;
+      padding: 28px;
+      box-sizing: border-box;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo img {
+      width: 60px;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    p {
+      font-size: 14px;
+      color: #aaa;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      font-size: 15px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      background: #1f1f1f;
+      color: #fff;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px;
+      font-size: 16px;
+      border: none;
+      border-radius: 12px;
+      background: #e50914;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:active {
+      opacity: 0.9;
+    }
+  </style>
 </head>
 
-<body style="
-  background:#0b0b0b;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  height:100vh;
-">
+<body>
 
-<div id="app" style="text-align:center; width:260px;">
+  <div class="card">
 
-  <h2 id="title">Votre nom</h2>
+    <div class="logo">
+      <img src="logo.png" alt="PAF X">
+    </div>
 
-  <input id="input"
-    type="text"
-    placeholder="Nom"
-    style="width:100%;padding:12px;border-radius:8px;border:none;"
-  >
+    <h2 id="title">Votre nom</h2>
+    <p id="desc">Entrez votre nom pour créer votre compte</p>
 
-  <br><br>
+    <input id="input" type="text" placeholder="Nom">
 
-  <button onclick="nextStep()" style="
-    width:100%;
-    padding:12px;
-    background:#e50914;
-    border:none;
-    border-radius:8px;
-    color:white;
-  ">
-    Suivant
-  </button>
+    <button onclick="nextStep()">Suivant</button>
 
-</div>
+  </div>
 
 <script>
   const steps = [
-    { title: "Votre nom", placeholder: "Nom", type: "text" },
-    { title: "Votre prénom", placeholder: "Prénom", type: "text" },
-    { title: "Date de naissance", placeholder: "", type: "date" },
-    { title: "Votre e-mail", placeholder: "email@example.com", type: "email" }
+    { title: "Votre nom", desc: "Entrez votre nom pour créer votre compte", type: "text", placeholder: "Nom" },
+    { title: "Votre prénom", desc: "Entrez votre prénom", type: "text", placeholder: "Prénom" },
+    { title: "Date de naissance", desc: "Votre date de naissance", type: "date", placeholder: "" },
+    { title: "Adresse e-mail", desc: "Un lien de confirmation sera envoyé", type: "email", placeholder: "email@example.com" }
   ];
 
   let step = 0;
@@ -54,7 +109,6 @@
     const input = document.getElementById("input");
     if (!input.value) return;
 
-    localStorage.setItem("step" + step, input.value);
     step++;
 
     if (step >= steps.length) {
@@ -63,8 +117,9 @@
     }
 
     document.getElementById("title").innerText = steps[step].title;
-    input.placeholder = steps[step].placeholder;
+    document.getElementById("desc").innerText = steps[step].desc;
     input.type = steps[step].type;
+    input.placeholder = steps[step].placeholder;
     input.value = "";
   }
 </script>
