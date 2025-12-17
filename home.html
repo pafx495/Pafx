@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+*{box-sizing:border-box}
 body{
   margin:0;
   background:#0b0b0b;
@@ -13,114 +14,158 @@ body{
   color:#fff;
 }
 
-/* HEADER */
-.header{
+/* TOP BAR */
+.top{
   height:56px;
   background:#141414;
   display:flex;
   align-items:center;
-  padding:0 16px;
+  justify-content:space-between;
+  padding:0 14px;
   border-bottom:1px solid #1f1f1f;
 }
-.header img{
+.top-left{
+  display:flex;
+  align-items:center;
+}
+.top img{
   width:32px;
   height:32px;
-  border-radius:50%;
-  margin-right:10px;
 }
-.header h1{
+.top-icons span{
+  margin-left:16px;
   font-size:18px;
-  margin:0;
-}
-
-/* LIST */
-.chat-list{
-  padding:8px 0;
-}
-
-.chat{
-  display:flex;
-  padding:12px 16px;
-  align-items:center;
   cursor:pointer;
 }
-.chat:hover{
-  background:#1a1a1a;
+
+/* TABS */
+.tabs{
+  display:flex;
+  background:#141414;
 }
+.tab{
+  flex:1;
+  text-align:center;
+  padding:12px 0;
+  font-size:14px;
+  color:#aaa;
+}
+.tab.active{
+  color:#e50914;
+  border-bottom:2px solid #e50914;
+}
+
+/* CHAT LIST */
+.chat{
+  display:flex;
+  padding:12px 14px;
+  align-items:center;
+}
+.chat:hover{background:#1a1a1a}
 
 .avatar{
   width:52px;
   height:52px;
   border-radius:50%;
-  object-fit:cover;
   margin-right:12px;
+  object-fit:cover;
 }
 
-.chat-info{
+.chat-body{
   flex:1;
   border-bottom:1px solid #1f1f1f;
   padding-bottom:10px;
 }
 
-.top-row{
+.row{
   display:flex;
   justify-content:space-between;
-  margin-bottom:4px;
 }
 
-.name{
-  font-weight:600;
-}
+.name{font-weight:600}
+.time{font-size:12px;color:#aaa}
 
-.time{
-  font-size:12px;
-  color:#aaa;
-}
-
-.last-message{
+.last{
   font-size:14px;
   color:#aaa;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  display:flex;
+  justify-content:space-between;
+}
+
+.badge{
+  background:#e50914;
+  color:#fff;
+  font-size:12px;
+  padding:2px 6px;
+  border-radius:12px;
+}
+
+/* FAB */
+.fab{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  background:#e50914;
+  color:#fff;
+  font-size:26px;
+  border:none;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
-<div class="header">
-  <img src="logo.png">
-  <h1>PAF X</h1>
+<!-- TOP -->
+<div class="top">
+  <div class="top-left">
+    <img src="logo.png">
+  </div>
+  <div class="top-icons">
+    <span>🔍</span>
+    <span>⋮</span>
+  </div>
 </div>
 
-<!-- CHATS -->
-<div class="chat-list">
-
-  <div class="chat">
-    <img class="avatar" src="https://i.pravatar.cc/150?img=32">
-    <div class="chat-info">
-      <div class="top-row">
-        <div class="name">Mère Annette</div>
-        <div class="time">07:59</div>
-      </div>
-      <div class="last-message">Voici le lien...</div>
-    </div>
-  </div>
-
-  <div class="chat">
-    <img class="avatar" src="https://i.pravatar.cc/150?img=47">
-    <div class="chat-info">
-      <div class="top-row">
-        <div class="name">Kevine 🔥</div>
-        <div class="time">07:54</div>
-      </div>
-      <div class="last-message">Accès au film GENESIS</div>
-    </div>
-  </div>
-
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active">Discussions</div>
+  <div class="tab">Actus</div>
+  <div class="tab">Appels</div>
 </div>
+
+<!-- CHAT LIST -->
+<div class="chat">
+  <img class="avatar" src="https://i.pravatar.cc/150?img=32">
+  <div class="chat-body">
+    <div class="row">
+      <div class="name">Mère Annette</div>
+      <div class="time">07:59</div>
+    </div>
+    <div class="last">
+      <span>Voici le lien...</span>
+      <span class="badge">1</span>
+    </div>
+  </div>
+</div>
+
+<div class="chat">
+  <img class="avatar" src="https://i.pravatar.cc/150?img=47">
+  <div class="chat-body">
+    <div class="row">
+      <div class="name">Kevine 🔥</div>
+      <div class="time">07:54</div>
+    </div>
+    <div class="last">
+      <span>Accès au film GENESIS</span>
+    </div>
+  </div>
+</div>
+
+<!-- FAB -->
+<button class="fab">＋</button>
 
 </body>
 </html>
