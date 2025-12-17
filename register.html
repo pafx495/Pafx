@@ -89,7 +89,12 @@
     <h2 id="title">Votre nom</h2>
     <p id="desc">Entrez votre nom pour créer votre compte</p>
 
-    <input id="input" type="text" placeholder="Nom">
+    <input
+      id="input"
+      type="text"
+      placeholder="Nom"
+      autocomplete="off"
+    >
 
     <button onclick="nextStep()">Suivant</button>
 
@@ -97,27 +102,49 @@
 
 <script>
   const steps = [
-    { title: "Votre nom", desc: "Entrez votre nom pour créer votre compte", type: "text", placeholder: "Nom" },
-    { title: "Votre prénom", desc: "Entrez votre prénom", type: "text", placeholder: "Prénom" },
-    { title: "Date de naissance", desc: "Votre date de naissance", type: "date", placeholder: "" },
-    { title: "Adresse e-mail", desc: "Un lien de confirmation sera envoyé", type: "email", placeholder: "email@example.com" }
+    {
+      title: "Votre nom",
+      desc: "Entrez votre nom pour créer votre compte",
+      type: "text",
+      placeholder: "Nom"
+    },
+    {
+      title: "Votre prénom",
+      desc: "Entrez votre prénom",
+      type: "text",
+      placeholder: "Prénom"
+    },
+    {
+      title: "Date de naissance",
+      desc: "Votre date de naissance",
+      type: "date",
+      placeholder: ""
+    },
+    {
+      title: "Adresse e-mail",
+      desc: "Un lien de confirmation sera envoyé",
+      type: "email",
+      placeholder: "email@example.com"
+    }
   ];
 
   let step = 0;
 
   function nextStep() {
     const input = document.getElementById("input");
+
     if (!input.value) return;
 
     step++;
 
     if (step >= steps.length) {
-      alert("Un email de confirmation sera envoyé.");
+      window.location.href = "verify.html";
       return;
     }
 
     document.getElementById("title").innerText = steps[step].title;
     document.getElementById("desc").innerText = steps[step].desc;
+
     input.type = steps[step].type;
     input.placeholder = steps[step].placeholder;
     input.value = "";
