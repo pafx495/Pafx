@@ -4,39 +4,102 @@
   <meta charset="UTF-8">
   <title>PAF X</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    body {
+      margin: 0;
+      background: #0b0b0b;
+      color: #fff;
+      font-family: system-ui, -apple-system;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top bar */
+    .topbar {
+      height: 56px;
+      background: #141414;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #1f1f1f;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .topbar img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+
+    .app-name {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    /* Content */
+    .content {
+      flex: 1;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .empty {
+      text-align: center;
+      margin-top: 80px;
+      color: #aaa;
+    }
+
+    .empty h3 {
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    /* Floating button */
+    .fab {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #e50914;
+      color: #fff;
+      border: none;
+      font-size: 26px;
+      cursor: pointer;
+    }
+  </style>
 </head>
+
 <body>
 
-  <header class="top-bar">
-    <h2>PAF X</h2>
-  </header>
-
-  <div class="chat-list">
-
-    <div class="chat-item" onclick="openChat()">
-      <img src="https://i.pravatar.cc/150?img=3" class="avatar">
-      <div class="chat-info">
-        <div class="top">
-          <span class="name">Mère Annette</span>
-          <span class="time">07:59</span>
-        </div>
-        <div class="message">Voici le lien...</div>
-      </div>
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <img src="logo.png" alt="PAF X">
+      <div class="app-name">PAF X</div>
     </div>
-
-    <div class="chat-item">
-      <img src="https://i.pravatar.cc/150?img=5" class="avatar">
-      <div class="chat-info">
-        <div class="top">
-          <span class="name">Kevine 🔥</span>
-          <span class="time">07:54</span>
-        </div>
-        <div class="message">Accès au film GENESIS</div>
-      </div>
-    </div>
-
   </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <div class="empty">
+      <h3>Aucune discussion</h3>
+      <p>Commencez une nouvelle conversation</p>
+    </div>
+  </div>
+
+  <!-- NEW CHAT BUTTON -->
+  <button class="fab">+</button>
 
 </body>
 </html>
