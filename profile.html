@@ -6,10 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+*{box-sizing:border-box}
 body{
   margin:0;
-  background:#0b0b0b;
   font-family:system-ui,-apple-system;
+  background:#0b0b0b;
   color:#fff;
 }
 
@@ -19,35 +20,36 @@ body{
   background:#141414;
   display:flex;
   align-items:center;
-  padding:0 14px;
+  padding:0 16px;
   border-bottom:1px solid #1f1f1f;
 }
 .back{
   font-size:20px;
-  margin-right:14px;
   cursor:pointer;
+  margin-right:16px;
 }
 .header h1{
   font-size:18px;
   margin:0;
 }
 
-/* PROFILE */
-.profile{
+/* PROFILE TOP */
+.profile-top{
   display:flex;
   flex-direction:column;
   align-items:center;
-  padding:30px 20px;
+  padding:32px 20px;
 }
 .avatar{
   width:120px;
   height:120px;
   border-radius:50%;
-  object-fit:cover;
   border:3px solid #e50914;
+  object-fit:cover;
 }
-.name{
+.fullname{
   font-size:20px;
+  font-weight:600;
   margin-top:16px;
 }
 .email{
@@ -56,10 +58,16 @@ body{
   margin-top:6px;
 }
 
-/* INFO */
+/* INFO LIST */
 .section{
-  margin-top:30px;
+  margin-top:24px;
   padding:0 20px;
+}
+.item{
+  background:#141414;
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:12px;
 }
 .label{
   font-size:12px;
@@ -67,18 +75,17 @@ body{
   margin-bottom:6px;
 }
 .value{
-  background:#141414;
-  padding:14px;
-  border-radius:12px;
+  font-size:15px;
 }
 
 /* LOGOUT */
 .logout{
-  margin:40px 20px;
-  padding:14px;
-  border-radius:14px;
+  margin:30px 20px;
   background:#e50914;
+  padding:16px;
+  border-radius:30px;
   text-align:center;
+  font-weight:600;
   cursor:pointer;
 }
 </style>
@@ -88,21 +95,28 @@ body{
 
 <!-- HEADER -->
 <div class="header">
-  <div class="back" onclick="history.back()">⬅️</div>
+  <div class="back" onclick="history.back()">←</div>
   <h1>Profil</h1>
 </div>
 
 <!-- PROFILE -->
-<div class="profile">
-  <img class="avatar" src="https://i.pravatar.cc/150?img=47">
-  <div class="name">Utilisateur PAF X</div>
-  <div class="email">utilisateur@email.com</div>
+<div class="profile-top">
+  <img src="logo.png" class="avatar">
+  <div class="fullname">Nom Prénom</div>
+  <div class="email">email@pafx.com</div>
 </div>
 
-<!-- STATUS -->
+<!-- INFOS -->
 <div class="section">
-  <div class="label">Statut</div>
-  <div class="value">Disponible sur PAF X</div>
+  <div class="item">
+    <div class="label">Statut</div>
+    <div class="value">Disponible sur PAF X</div>
+  </div>
+
+  <div class="item">
+    <div class="label">Date de naissance</div>
+    <div class="value">-- / -- / ----</div>
+  </div>
 </div>
 
 <!-- LOGOUT -->
