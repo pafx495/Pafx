@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Profil – PAF X</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  background:#0b0b0b;
+  font-family:system-ui,-apple-system;
+  color:#fff;
+}
+
+/* HEADER */
+.header{
+  height:56px;
+  background:#141414;
+  display:flex;
+  align-items:center;
+  padding:0 14px;
+  border-bottom:1px solid #1f1f1f;
+}
+.back{
+  font-size:20px;
+  margin-right:14px;
+  cursor:pointer;
+}
+.header h1{
+  font-size:18px;
+  margin:0;
+}
+
+/* PROFILE */
+.profile{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:30px 20px;
+}
+.avatar{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid #e50914;
+}
+.name{
+  font-size:20px;
+  margin-top:16px;
+}
+.email{
+  font-size:14px;
+  color:#aaa;
+  margin-top:6px;
+}
+
+/* INFO */
+.section{
+  margin-top:30px;
+  padding:0 20px;
+}
+.label{
+  font-size:12px;
+  color:#aaa;
+  margin-bottom:6px;
+}
+.value{
+  background:#141414;
+  padding:14px;
+  border-radius:12px;
+}
+
+/* LOGOUT */
+.logout{
+  margin:40px 20px;
+  padding:14px;
+  border-radius:14px;
+  background:#e50914;
+  text-align:center;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="back" onclick="history.back()">⬅️</div>
+  <h1>Profil</h1>
+</div>
+
+<!-- PROFILE -->
+<div class="profile">
+  <img class="avatar" src="https://i.pravatar.cc/150?img=47">
+  <div class="name">Utilisateur PAF X</div>
+  <div class="email">utilisateur@email.com</div>
+</div>
+
+<!-- STATUS -->
+<div class="section">
+  <div class="label">Statut</div>
+  <div class="value">Disponible sur PAF X</div>
+</div>
+
+<!-- LOGOUT -->
+<div class="logout">Se déconnecter</div>
+
+</body>
+</html>
