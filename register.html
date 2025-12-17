@@ -15,27 +15,59 @@
   height:100vh;
 ">
 
-  <div style="text-align:center;">
-    <h2>Bienvenue sur PAF X</h2>
-    <p>Commençons par votre nom</p>
+<div id="app" style="text-align:center; width:260px;">
 
-    <input 
-      type="text" 
-      placeholder="Votre nom"
-      style="padding:12px;border-radius:8px;border:none;width:220px;"
-    >
-    <br><br>
+  <h2 id="title">Votre nom</h2>
 
-    <button style="
-      padding:12px 20px;
-      border:none;
-      border-radius:8px;
-      background:#e50914;
-      color:white;
-    ">
-      Suivant
-    </button>
-  </div>
+  <input id="input"
+    type="text"
+    placeholder="Nom"
+    style="width:100%;padding:12px;border-radius:8px;border:none;"
+  >
+
+  <br><br>
+
+  <button onclick="nextStep()" style="
+    width:100%;
+    padding:12px;
+    background:#e50914;
+    border:none;
+    border-radius:8px;
+    color:white;
+  ">
+    Suivant
+  </button>
+
+</div>
+
+<script>
+  const steps = [
+    { title: "Votre nom", placeholder: "Nom", type: "text" },
+    { title: "Votre prénom", placeholder: "Prénom", type: "text" },
+    { title: "Date de naissance", placeholder: "", type: "date" },
+    { title: "Votre e-mail", placeholder: "email@example.com", type: "email" }
+  ];
+
+  let step = 0;
+
+  function nextStep() {
+    const input = document.getElementById("input");
+    if (!input.value) return;
+
+    localStorage.setItem("step" + step, input.value);
+    step++;
+
+    if (step >= steps.length) {
+      alert("Un email de confirmation sera envoyé.");
+      return;
+    }
+
+    document.getElementById("title").innerText = steps[step].title;
+    input.placeholder = steps[step].placeholder;
+    input.type = steps[step].type;
+    input.value = "";
+  }
+</script>
 
 </body>
 </html>
