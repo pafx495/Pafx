@@ -1,30 +1,50 @@
-<!DOCTYPE html>
-<html lang="fr">
+<!DOCTYPE html><html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>PAF X</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>PAF X – Menu & Profil</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system;background:#0b0b0b;color:#fff}/* TOP BAR */ .top{height:56px;background:#141414;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid #1f1f1f} .top img{width:32px;height:32px;border-radius:50%} .top .icons span{margin-left:16px;font-size:20px;cursor:pointer}
 
-  <script>
-    setTimeout(function () {
-      window.location.href = "register.html";
-    }, 2000);
-  </script>
+/* DRAWER */ .drawer{position:fixed;top:0;left:-100%;width:100%;height:100%;background:#fff;color:#000;transition:.3s;z-index:10;overflow-y:auto} .drawer.active{left:0} .drawer-header{padding:20px;background:#f5f5f5;display:flex;align-items:center;gap:14px} .drawer-header img{width:56px;height:56px;border-radius:50%} .drawer-header .name{font-weight:600} .drawer-item{display:flex;align-items:center;padding:16px 20px;border-bottom:1px solid #eee;gap:16px;cursor:pointer} .drawer-item span{font-size:20px} .drawer-item small{display:block;color:#666}
+
+/* PROFILE PAGE */ .profile{position:fixed;top:0;left:0;width:100%;height:100%;background:#0b0b0b;z-index:20;display:none} .profile.active{display:block} .profile-header{padding:20px;text-align:center;background:#141414} .profile-header img{width:96px;height:96px;border-radius:50%;margin-bottom:10px} .profile-name{font-size:18px;font-weight:600} .profile-email{font-size:14px;color:#aaa} .profile-back{position:absolute;top:16px;left:16px;font-size:20px;cursor:pointer}
+
+</style>
 </head>
-
-<body style="
-  background:#0b0b0b;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  height:100vh;
-">
-
-  <img 
-    src="logo.png" 
-    alt="PAF X"
-    style="width:140px;"
-  >
-
-</body>
+<body><!-- TOP BAR --><div class="top">
+  <span onclick="openDrawer()">☰</span>
+  <strong>PAF X</strong>
+  <div class="icons">
+    <span onclick="openProfile()">👤</span>
+  </div>
+</div><!-- DRAWER (MENU BURGER) --><div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <img src="logo.png">
+    <div>
+      <div class="name">PAF STREAM</div>
+      <small>Quoi de neuf ?</small>
+    </div>
+  </div>  <div class="drawer-item"><span>🔑</span><div><strong>Compte</strong><small>Sécurité, email</small></div></div>
+  <div class="drawer-item"><span>🔒</span><div><strong>Confidentialité</strong><small>Blocage, messages</small></div></div>
+  <div class="drawer-item"><span>🧑</span><div><strong>Avatar</strong><small>Photo de profil</small></div></div>
+  <div class="drawer-item"><span>⭐</span><div><strong>Favoris</strong><small>Ajouter, retirer</small></div></div>
+  <div class="drawer-item"><span>💬</span><div><strong>Discussions</strong><small>Thèmes, fonds</small></div></div>
+  <div class="drawer-item"><span>🔔</span><div><strong>Notifications</strong><small>Messages, appels</small></div></div>
+  <div class="drawer-item"><span>💾</span><div><strong>Stockage</strong><small>Données, réseau</small></div></div>
+</div><!-- PROFILE FULL --><div class="profile" id="profile">
+  <span class="profile-back" onclick="closeProfile()">←</span>
+  <div class="profile-header">
+    <img src="logo.png">
+    <div class="profile-name">PAF STREAM</div>
+    <div class="profile-email">contact@pafstream.com</div>
+  </div>
+</div><script>
+function openDrawer(){document.getElementById('drawer').classList.add('active')}
+function closeDrawer(){document.getElementById('drawer').classList.remove('active')}
+function openProfile(){document.getElementById('profile').classList.add('active')}
+function closeProfile(){document.getElementById('profile').classList.remove('active')}
+document.getElementById('drawer').addEventListener('click',closeDrawer)
+</script></body>
 </html>
