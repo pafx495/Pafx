@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>PAF X</title>
+<title>PAF X — Discussions</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -27,32 +27,20 @@ body{
 .top-left{
   display:flex;
   align-items:center;
+  gap:10px;
 }
-.top img{
-  width:34px;
-  height:34px;
+.logo{
+  width:28px;
 }
-.top-icons span{
-  margin-left:18px;
-  font-size:18px;
+.title{
+  font-weight:600;
+}
+.avatar{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  object-fit:cover;
   cursor:pointer;
-}
-
-/* TABS */
-.tabs{
-  display:flex;
-  background:#141414;
-}
-.tab{
-  flex:1;
-  text-align:center;
-  padding:12px 0;
-  font-size:14px;
-  color:#aaa;
-}
-.tab.active{
-  color:#e50914;
-  border-bottom:2px solid #e50914;
 }
 
 /* CHAT LIST */
@@ -63,7 +51,7 @@ body{
 }
 .chat:hover{background:#1a1a1a}
 
-.avatar{
+.chat-avatar{
   width:52px;
   height:52px;
   border-radius:50%;
@@ -88,17 +76,29 @@ body{
 .last{
   font-size:14px;
   color:#aaa;
-  display:flex;
-  justify-content:space-between;
-  margin-top:4px;
 }
 
-.badge{
-  background:#e50914;
-  color:#fff;
-  font-size:12px;
-  padding:2px 6px;
-  border-radius:12px;
+/* PROFILE PANEL */
+#profile{
+  position:fixed;
+  inset:0;
+  background:#0b0b0b;
+  display:none;
+  padding:24px;
+}
+
+#profile img{
+  width:96px;
+  height:96px;
+  border-radius:50%;
+  display:block;
+  margin:20px auto;
+}
+
+.profile-item{
+  margin-top:16px;
+  color:#ccc;
+  text-align:center;
 }
 
 /* FAB */
@@ -119,71 +119,84 @@ body{
 
 <body>
 
-<!-- TOP BAR -->
+<!-- TOP -->
 <div class="top">
   <div class="top-left">
-    <img src="logo.png" alt="PAF X">
+    <img src="logo.png" class="logo">
+    <div class="title">PAF X</div>
   </div>
-  <div class="top-icons">
-    <span>🔍</span>
-    <span onclick="openMenu()">⋮</span>
-  </div>
+  <img id="avatarTop" class="avatar">
 </div>
 
-<!-- TABS -->
-<div class="tabs">
-  <div class="tab active">Discussions</div>
-  <div class="tab">Actus</div>
-  <div class="tab">Appels</div>
-</div>
-
-<!-- CHATS -->
+<!-- CHAT LIST -->
 <div class="chat">
-  <img class="avatar" src="https://i.pravatar.cc/150?img=32">
+  <img class="chat-avatar" src="https://i.pravatar.cc/150?img=12">
   <div class="chat-body">
     <div class="row">
-      <div class="name">Mère Annette</div>
-      <div class="time">08:02</div>
+      <div class="name">PAF STREAM</div>
+      <div class="time">08:12</div>
     </div>
-    <div class="last">
-      <span>Voici le lien…</span>
-      <span class="badge">1</span>
-    </div>
+    <div class="last">Bienvenue sur PAF X 🎉</div>
   </div>
 </div>
 
-<div class="chat">
-  <img class="avatar" src="https://i.pravatar.cc/150?img=47">
-  <div class="chat-body">
-    <div class="row">
-      <div class="name">Kevine 🔥</div>
-      <div class="time">07:54</div>
-    </div>
-    <div class="last">
-      <span>Accès au film GENESIS</span>
-    </div>
-  </div>
-</div>
-
-<div class="chat">
-  <img class="avatar" src="https://i.pravatar.cc/150?img=12">
-  <div class="chat-body">
-    <div class="row">
-      <div class="name">PAF Stream</div>
-      <div class="time">Hier</div>
-    </div>
-    <div class="last">
-      <span>Bienvenue sur PAF X 🎉</span>
-    </div>
-  </div>
-</div>
-
-<!-- NEW CHAT -->
 <button class="fab">＋</button>
 
-<script>
-function openMenu(){
-  alert("Menu à venir : Profil • Paramètres • Déconnexion");
+<!-- PROFILE -->
+<div id="profile">
+  <img id="profileImg">
+  <div class="profile-item" id="pName"></div>
+  <div class="profile-item" id="pEmail"></div>
+  <div class="profile-item" id="pPhone"></div>
+
+  <button onclick="closeProfile()" style="margin-top:30px">Fermer</button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+/* FIREBASE */
+const firebaseConfig = {
+  apiKey: "AIzaSyCAsEnTrE0EvR0ZwbS_YpF3a4Ph3S3VHZQ",
+  authDomain: "paf-x-56f2d.firebaseapp.com",
+  projectId: "paf-x-56f2d",
+  storageBucket: "paf-x-56f2d.firebasestorage.app",
+  messagingSenderId: "1023059500240",
+  appId: "1:1023059500240:web:9d3a646b52f510cbd512d5"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+/* AUTH CHECK */
+onAuthStateChanged(auth, async (user)=>{
+  if(!user){
+    window.location.href="index.html";
+    return;
+  }
+
+  const snap = await getDoc(doc(db,"users",user.email));
+  if(!snap.exists()) return;
+
+  const data = snap.data();
+
+  avatarTop.src = user.photoURL || "https://i.pravatar.cc/150";
+  profileImg.src = avatarTop.src;
+
+  pName.textContent = data.prenom+" "+data.nom;
+  pEmail.textContent = data.email;
+  pPhone.textContent = data.phone;
+});
+
+/* PROFILE */
+avatarTop.onclick=()=>{
+  profile.style.display="block";
+}
+window.closeProfile=()=>{
+  profile.style.display="none";
 }
 </script>
 
