@@ -22,41 +22,40 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  z-index:10;
+  z-index:100;
 }
 #splash img{
-  width:110px;
-  animation:zoom 1.5s ease;
+  width:120px;
+  animation:zoom 1.6s ease;
 }
 @keyframes zoom{
   from{transform:scale(.6);opacity:0}
   to{transform:scale(1);opacity:1}
 }
 
-/* CONTAINER */
-.container{
+/* APP */
+#app{
+  display:none;
   max-width:420px;
   margin:auto;
   padding:24px;
-  display:none;
 }
 
 .logo{
+  width:72px;
   display:block;
   margin:30px auto 20px;
-  width:70px;
 }
 
-/* TITLES */
 h1{
   text-align:center;
   font-size:22px;
-  margin-bottom:10px;
+  margin-bottom:8px;
 }
 p{
   text-align:center;
-  color:#aaa;
   font-size:14px;
+  color:#aaa;
 }
 
 /* FORM */
@@ -80,7 +79,7 @@ input::placeholder{color:#777}
 
 button{
   width:100%;
-  margin-top:26px;
+  margin-top:28px;
   padding:14px;
   border:none;
   border-radius:25px;
@@ -93,12 +92,11 @@ button{
 .step{display:none}
 .step.active{display:block}
 
-/* INFO */
 .info{
   margin-top:20px;
+  text-align:center;
   font-size:13px;
   color:#aaa;
-  text-align:center;
 }
 </style>
 </head>
@@ -107,18 +105,18 @@ button{
 
 <!-- SPLASH -->
 <div id="splash">
-  <img src="logo.png">
+  <img src="logo.png" alt="PAF X">
 </div>
 
 <!-- APP -->
-<div class="container" id="app">
+<div id="app">
 
   <img src="logo.png" class="logo">
 
   <!-- STEP 1 -->
   <div class="step active" id="step1">
     <h1>Votre numéro</h1>
-    <p>Choisissez votre pays et entrez votre numéro</p>
+    <p>Sélectionnez votre pays et votre numéro</p>
 
     <label>Pays</label>
     <select id="country"></select>
@@ -126,13 +124,13 @@ button{
     <label>Numéro de téléphone</label>
     <input id="phone" placeholder="Numéro sans indicatif">
 
-    <button onclick="goEmail()">Suivant</button>
+    <button onclick="goStep2()">Suivant</button>
   </div>
 
   <!-- STEP 2 -->
   <div class="step" id="step2">
     <h1>Adresse e-mail</h1>
-    <p>Un code de confirmation vous sera envoyé</p>
+    <p>Un lien sécurisé vous sera envoyé</p>
 
     <label>Email</label>
     <input id="email" type="email" placeholder="exemple@email.com">
@@ -143,33 +141,31 @@ button{
   <!-- STEP 3 -->
   <div class="step" id="step3">
     <h1>Vérification</h1>
-    <p>Un code a été envoyé à votre email</p>
+    <p>Consultez votre email pour continuer</p>
 
     <div class="info">
       Numéro enregistré ✔️<br>
       Email sécurisé ✔️
     </div>
-
-    <button onclick="finish()">Accéder à PAF X</button>
   </div>
 
 </div>
 
 <!-- SCRIPTS -->
 <script src="countries.js"></script>
-<script>
-const splash = document.getElementById("splash");
-const app = document.getElementById("app");
-const steps = document.querySelectorAll(".step");
-const country = document.getElementById("country");
-const phone = document.getElementById("phone");
+<script src="firebase.js" type="module"></script>
 
+<script>
+/* SPLASH */
 setTimeout(()=>{
-  splash.style.display="none";
-  app.style.display="block";
+  document.getElementById("splash").style.display="none";
+  document.getElementById("app").style.display="block";
 },2000);
 
-/* Load countries */
+/* COUNTRIES */
+const country=document.getElementById("country");
+const phone=document.getElementById("phone");
+
 countries.forEach(c=>{
   const opt=document.createElement("option");
   opt.value=c.code;
@@ -177,28 +173,43 @@ countries.forEach(c=>{
   if(c.code==="+237") opt.selected=true;
   country.appendChild(opt);
 });
-
 country.onchange=()=>phone.value=country.value+" ";
 
+/* STEPS */
 function showStep(n){
-  steps.forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".step").forEach(s=>s.classList.remove("active"));
   document.getElementById("step"+n).classList.add("active");
 }
-
-function goEmail(){
+function goStep2(){
   if(phone.value.length<6) return alert("Numéro invalide");
   showStep(2);
 }
 
+/* FIREBASE EMAIL LINK */
 function sendCode(){
   const email=document.getElementById("email").value;
   if(!email.includes("@")) return alert("Email invalide");
-  showStep(3);
-}
 
-function finish(){
-  alert("Compte créé avec succès 🎉");
-  // redirection future : home.html
+  const actionCodeSettings={
+    url:"https://pafx495.github.io/Pafx/home.html",
+    handleCodeInApp:true
+  };
+
+  sendSignInLinkToEmail(auth,email,actionCodeSettings)
+    .then(()=>{
+      localStorage.setItem("emailForSignIn",email);
+
+      setDoc(doc(db,"users",email),{
+        phone:phone.value,
+        email:email,
+        createdAt:new Date()
+      });
+
+      showStep(3);
+    })
+    .catch(err=>{
+      alert("Erreur Firebase : "+err.message);
+    });
 }
 </script>
 
