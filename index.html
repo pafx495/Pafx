@@ -122,7 +122,10 @@ button{
     <select id="country"></select>
 
     <label>Numéro de téléphone</label>
-    <input id="phone" placeholder="Numéro sans indicatif">
+    <div style="display:flex;gap:10px">
+      <input id="dial" readonly style="width:30%;text-align:center">
+      <input id="phone" placeholder="Numéro de téléphone" style="width:70%">
+    </div>
 
     <button onclick="goStep2()">Suivant</button>
   </div>
@@ -153,42 +156,74 @@ button{
 
 <!-- SCRIPTS -->
 <script src="countries.js"></script>
-<script src="firebase.js" type="module"></script>
 
-<script>
+<script type="module">
+/* FIREBASE */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getAuth, sendSignInLinkToEmail } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCAsEnTrE0EvR0ZwbS_YpF3a4Ph3S3VHZQ",
+  authDomain: "paf-x-56f2d.firebaseapp.com",
+  projectId: "paf-x-56f2d",
+  storageBucket: "paf-x-56f2d.firebasestorage.app",
+  messagingSenderId: "1023059500240",
+  appId: "1:1023059500240:web:9d3a646b52f510cbd512d5"
+};
+
+const appFirebase = initializeApp(firebaseConfig);
+const auth = getAuth(appFirebase);
+const db = getFirestore(appFirebase);
+
 /* SPLASH */
 setTimeout(()=>{
   document.getElementById("splash").style.display="none";
   document.getElementById("app").style.display="block";
 },2000);
 
-/* COUNTRIES */
-const country=document.getElementById("country");
-const phone=document.getElementById("phone");
+/* PAYS + INDICATIF */
+const countrySelect = document.getElementById("country");
+const dialInput = document.getElementById("dial");
+const phoneInput = document.getElementById("phone");
 
 countries.forEach(c=>{
   const opt=document.createElement("option");
   opt.value=c.code;
-  opt.textContent=`${c.flag} ${c.name} (${c.code})`;
+  opt.textContent=`${c.flag} ${c.name}`;
   if(c.code==="+237") opt.selected=true;
-  country.appendChild(opt);
+  countrySelect.appendChild(opt);
 });
-country.onchange=()=>phone.value=country.value+" ";
+
+dialInput.value="+237";
+
+countrySelect.addEventListener("change",()=>{
+  dialInput.value=countrySelect.value;
+  phoneInput.focus();
+});
 
 /* STEPS */
 function showStep(n){
   document.querySelectorAll(".step").forEach(s=>s.classList.remove("active"));
   document.getElementById("step"+n).classList.add("active");
 }
-function goStep2(){
-  if(phone.value.length<6) return alert("Numéro invalide");
-  showStep(2);
-}
 
-/* FIREBASE EMAIL LINK */
-function sendCode(){
+window.goStep2=()=>{
+  if(phoneInput.value.length<6){
+    alert("Numéro invalide");
+    return;
+  }
+  window.fullPhone=dialInput.value+phoneInput.value;
+  showStep(2);
+};
+
+/* EMAIL LINK */
+window.sendCode=()=>{
   const email=document.getElementById("email").value;
-  if(!email.includes("@")) return alert("Email invalide");
+  if(!email.includes("@")){
+    alert("Email invalide");
+    return;
+  }
 
   const actionCodeSettings={
     url:"https://pafx495.github.io/Pafx/home.html",
@@ -200,7 +235,7 @@ function sendCode(){
       localStorage.setItem("emailForSignIn",email);
 
       setDoc(doc(db,"users",email),{
-        phone:phone.value,
+        phone:window.fullPhone,
         email:email,
         createdAt:new Date()
       });
@@ -208,9 +243,9 @@ function sendCode(){
       showStep(3);
     })
     .catch(err=>{
-      alert("Erreur Firebase : "+err.message);
+      alert("Erreur : "+err.message);
     });
-}
+};
 </script>
 
 </body>
