@@ -138,7 +138,7 @@ button{
     <label>Email</label>
     <input id="email" type="email" placeholder="exemple@email.com">
 
-    <button onclick="sendCode()">Continuer</button>
+    <button onclick="sendLink()">Continuer</button>
   </div>
 
   <!-- STEP 3 -->
@@ -154,15 +154,26 @@ button{
 
 </div>
 
-<!-- SCRIPTS -->
+<!-- PAYS -->
 <script src="countries.js"></script>
 
+<!-- FIREBASE + LOGIC -->
 <script type="module">
-/* FIREBASE */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getAuth, sendSignInLinkToEmail } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+import { 
+  getAuth,
+  sendSignInLinkToEmail,
+  setPersistence,
+  browserLocalPersistence,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { 
+  getFirestore,
+  doc,
+  setDoc
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
+/* CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyCAsEnTrE0EvR0ZwbS_YpF3a4Ph3S3VHZQ",
   authDomain: "paf-x-56f2d.firebaseapp.com",
@@ -172,9 +183,20 @@ const firebaseConfig = {
   appId: "1:1023059500240:web:9d3a646b52f510cbd512d5"
 };
 
-const appFirebase = initializeApp(firebaseConfig);
-const auth = getAuth(appFirebase);
-const db = getFirestore(appFirebase);
+/* INIT */
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+/* SESSION PERSISTANTE */
+setPersistence(auth, browserLocalPersistence);
+
+/* AUTO REDIRECT SI CONNECTÉ */
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    window.location.href = "home.html";
+  }
+});
 
 /* SPLASH */
 setTimeout(()=>{
@@ -182,7 +204,7 @@ setTimeout(()=>{
   document.getElementById("app").style.display="block";
 },2000);
 
-/* PAYS + INDICATIF */
+/* PAYS */
 const countrySelect = document.getElementById("country");
 const dialInput = document.getElementById("dial");
 const phoneInput = document.getElementById("phone");
@@ -194,12 +216,10 @@ countries.forEach(c=>{
   if(c.code==="+237") opt.selected=true;
   countrySelect.appendChild(opt);
 });
-
 dialInput.value="+237";
 
 countrySelect.addEventListener("change",()=>{
   dialInput.value=countrySelect.value;
-  phoneInput.focus();
 });
 
 /* STEPS */
@@ -218,7 +238,7 @@ window.goStep2=()=>{
 };
 
 /* EMAIL LINK */
-window.sendCode=()=>{
+window.sendLink=()=>{
   const email=document.getElementById("email").value;
   if(!email.includes("@")){
     alert("Email invalide");
@@ -242,9 +262,7 @@ window.sendCode=()=>{
 
       showStep(3);
     })
-    .catch(err=>{
-      alert("Erreur : "+err.message);
-    });
+    .catch(err=>alert(err.message));
 };
 </script>
 
