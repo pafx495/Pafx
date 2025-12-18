@@ -29,11 +29,11 @@ body{
   align-items:center;
 }
 .top img{
-  width:32px;
-  height:32px;
+  width:34px;
+  height:34px;
 }
 .top-icons span{
-  margin-left:16px;
+  margin-left:18px;
   font-size:18px;
   cursor:pointer;
 }
@@ -60,7 +60,6 @@ body{
   display:flex;
   padding:12px 14px;
   align-items:center;
-  cursor:pointer;
 }
 .chat:hover{background:#1a1a1a}
 
@@ -91,6 +90,7 @@ body{
   color:#aaa;
   display:flex;
   justify-content:space-between;
+  margin-top:4px;
 }
 
 .badge{
@@ -113,21 +113,20 @@ body{
   color:#fff;
   font-size:26px;
   border:none;
-  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<!-- TOP -->
+<!-- TOP BAR -->
 <div class="top">
   <div class="top-left">
-    <img src="logo.png">
+    <img src="logo.png" alt="PAF X">
   </div>
   <div class="top-icons">
     <span>🔍</span>
-    <span onclick="openProfile()">⋮</span>
+    <span onclick="openMenu()">⋮</span>
   </div>
 </div>
 
@@ -138,22 +137,22 @@ body{
   <div class="tab">Appels</div>
 </div>
 
-<!-- CHAT LIST -->
-<div class="chat" onclick="openChat()">
+<!-- CHATS -->
+<div class="chat">
   <img class="avatar" src="https://i.pravatar.cc/150?img=32">
   <div class="chat-body">
     <div class="row">
       <div class="name">Mère Annette</div>
-      <div class="time">07:59</div>
+      <div class="time">08:02</div>
     </div>
     <div class="last">
-      <span>Voici le lien...</span>
+      <span>Voici le lien…</span>
       <span class="badge">1</span>
     </div>
   </div>
 </div>
 
-<div class="chat" onclick="openChat()">
+<div class="chat">
   <img class="avatar" src="https://i.pravatar.cc/150?img=47">
   <div class="chat-body">
     <div class="row">
@@ -166,16 +165,25 @@ body{
   </div>
 </div>
 
-<!-- FAB -->
-<button class="fab" onclick="openChat()">＋</button>
+<div class="chat">
+  <img class="avatar" src="https://i.pravatar.cc/150?img=12">
+  <div class="chat-body">
+    <div class="row">
+      <div class="name">PAF Stream</div>
+      <div class="time">Hier</div>
+    </div>
+    <div class="last">
+      <span>Bienvenue sur PAF X 🎉</span>
+    </div>
+  </div>
+</div>
 
-<!-- SCRIPT -->
+<!-- NEW CHAT -->
+<button class="fab">＋</button>
+
 <script>
-function openChat(){
-  window.location.href = "chat.html";
-}
-function openProfile(){
-  window.location.href = "profile.html";
+function openMenu(){
+  alert("Menu à venir : Profil • Paramètres • Déconnexion");
 }
 </script>
 
