@@ -9,8 +9,8 @@
 *{box-sizing:border-box}
 body{
   margin:0;
-  font-family:system-ui,-apple-system;
   background:#0b0b0b;
+  font-family:system-ui,-apple-system;
   color:#fff;
 }
 
@@ -25,60 +25,80 @@ body{
   z-index:10;
 }
 #splash img{
-  width:120px;
-  animation:zoom 1.5s ease-in-out;
+  width:110px;
+  animation:zoom 1.5s ease;
 }
 @keyframes zoom{
-  0%{transform:scale(.8);opacity:0}
-  100%{transform:scale(1);opacity:1}
+  from{transform:scale(.6);opacity:0}
+  to{transform:scale(1);opacity:1}
 }
 
-/* REGISTER */
-#register{
-  display:none;
-  padding:24px;
+/* CONTAINER */
+.container{
   max-width:420px;
   margin:auto;
+  padding:24px;
+  display:none;
 }
 
+.logo{
+  display:block;
+  margin:30px auto 20px;
+  width:70px;
+}
+
+/* TITLES */
 h1{
   text-align:center;
-  margin-bottom:6px;
+  font-size:22px;
+  margin-bottom:10px;
 }
 p{
   text-align:center;
   color:#aaa;
-  margin-bottom:24px;
+  font-size:14px;
 }
 
-input{
-  width:100%;
-  padding:14px;
-  margin-bottom:14px;
-  border-radius:12px;
-  border:none;
-  font-size:16px;
+/* FORM */
+label{
+  display:block;
+  margin-top:18px;
+  font-size:14px;
+  color:#ccc;
 }
+select,input{
+  width:100%;
+  margin-top:6px;
+  padding:14px;
+  background:#141414;
+  border:1px solid #222;
+  border-radius:8px;
+  color:#fff;
+  font-size:15px;
+}
+input::placeholder{color:#777}
 
 button{
   width:100%;
+  margin-top:26px;
   padding:14px;
   border:none;
-  border-radius:30px;
+  border-radius:25px;
   background:#e50914;
   color:#fff;
   font-size:16px;
-  cursor:pointer;
 }
 
+/* STEPS */
 .step{display:none}
 .step.active{display:block}
 
-.footer{
-  text-align:center;
-  font-size:12px;
-  color:#777;
+/* INFO */
+.info{
   margin-top:20px;
+  font-size:13px;
+  color:#aaa;
+  text-align:center;
 }
 </style>
 </head>
@@ -87,79 +107,98 @@ button{
 
 <!-- SPLASH -->
 <div id="splash">
-  <img src="logo.png" alt="PAF X">
+  <img src="logo.png">
 </div>
 
-<!-- REGISTER -->
-<div id="register">
+<!-- APP -->
+<div class="container" id="app">
 
-  <h1>Bienvenue sur PAF X</h1>
-  <p>Messagerie privée & professionnelle</p>
+  <img src="logo.png" class="logo">
 
   <!-- STEP 1 -->
-  <div class="step active">
-    <input type="text" id="nom" placeholder="Nom" required>
-    <button onclick="nextStep()">Suivant</button>
+  <div class="step active" id="step1">
+    <h1>Votre numéro</h1>
+    <p>Choisissez votre pays et entrez votre numéro</p>
+
+    <label>Pays</label>
+    <select id="country"></select>
+
+    <label>Numéro de téléphone</label>
+    <input id="phone" placeholder="Numéro sans indicatif">
+
+    <button onclick="goEmail()">Suivant</button>
   </div>
 
   <!-- STEP 2 -->
-  <div class="step">
-    <input type="text" id="prenom" placeholder="Prénom" required>
-    <button onclick="nextStep()">Suivant</button>
+  <div class="step" id="step2">
+    <h1>Adresse e-mail</h1>
+    <p>Un code de confirmation vous sera envoyé</p>
+
+    <label>Email</label>
+    <input id="email" type="email" placeholder="exemple@email.com">
+
+    <button onclick="sendCode()">Continuer</button>
   </div>
 
   <!-- STEP 3 -->
-  <div class="step">
-    <input type="date" id="date" required>
-    <button onclick="nextStep()">Suivant</button>
-  </div>
+  <div class="step" id="step3">
+    <h1>Vérification</h1>
+    <p>Un code a été envoyé à votre email</p>
 
-  <!-- STEP 4 -->
-  <div class="step">
-    <input type="email" id="email" placeholder="Adresse e-mail" required>
-    <button onclick="finish()">Créer mon compte</button>
-  </div>
+    <div class="info">
+      Numéro enregistré ✔️<br>
+      Email sécurisé ✔️
+    </div>
 
-  <div class="footer">
-    En continuant, vous acceptez les conditions PAF X
+    <button onclick="finish()">Accéder à PAF X</button>
   </div>
 
 </div>
 
+<!-- SCRIPTS -->
+<script src="countries.js"></script>
 <script>
 const splash = document.getElementById("splash");
-const register = document.getElementById("register");
+const app = document.getElementById("app");
 const steps = document.querySelectorAll(".step");
-let current = 0;
+const country = document.getElementById("country");
+const phone = document.getElementById("phone");
 
-// Splash 2 secondes
 setTimeout(()=>{
   splash.style.display="none";
-  register.style.display="block";
+  app.style.display="block";
 },2000);
 
-function nextStep(){
-  const input = steps[current].querySelector("input");
-  if(!input.value){
-    alert("Veuillez remplir le champ");
-    return;
-  }
-  steps[current].classList.remove("active");
-  current++;
-  steps[current].classList.add("active");
+/* Load countries */
+countries.forEach(c=>{
+  const opt=document.createElement("option");
+  opt.value=c.code;
+  opt.textContent=`${c.flag} ${c.name} (${c.code})`;
+  if(c.code==="+237") opt.selected=true;
+  country.appendChild(opt);
+});
+
+country.onchange=()=>phone.value=country.value+" ";
+
+function showStep(n){
+  steps.forEach(s=>s.classList.remove("active"));
+  document.getElementById("step"+n).classList.add("active");
+}
+
+function goEmail(){
+  if(phone.value.length<6) return alert("Numéro invalide");
+  showStep(2);
+}
+
+function sendCode(){
+  const email=document.getElementById("email").value;
+  if(!email.includes("@")) return alert("Email invalide");
+  showStep(3);
 }
 
 function finish(){
-  const user = {
-    nom: document.getElementById("nom").value,
-    prenom: document.getElementById("prenom").value,
-    date: document.getElementById("date").value,
-    email: document.getElementById("email").value
-  };
-
-  localStorage.setItem("pafxUser", JSON.stringify(user));
-
-  window.location.href = "home.html";
+  alert("Compte créé avec succès 🎉");
+  // redirection future : home.html
 }
 </script>
 
