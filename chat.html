@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Discussion – PAF X</title>
+<title>PAF X — Chat</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -10,111 +10,156 @@
 body{
   margin:0;
   background:#0b0b0b;
-  font-family:system-ui,-apple-system;
+  font-family:system-ui;
   color:#fff;
-  height:100vh;
   display:flex;
   flex-direction:column;
+  height:100vh;
 }
 
 /* HEADER */
-.header{
+.top{
   height:56px;
   background:#141414;
   display:flex;
   align-items:center;
-  padding:0 12px;
+  padding:0 14px;
   border-bottom:1px solid #1f1f1f;
 }
-.back{
-  font-size:20px;
-  margin-right:10px;
-  cursor:pointer;
-}
-.header img{
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  margin-right:10px;
-}
-.name{
-  font-weight:600;
-}
+.back{font-size:22px;cursor:pointer;margin-right:10px}
+.name{font-weight:600}
 
-/* CHAT */
-.chat{
+/* MESSAGES */
+#messages{
   flex:1;
-  padding:16px;
+  padding:14px;
   overflow-y:auto;
 }
 
-/* BUBBLES */
 .msg{
   max-width:75%;
-  padding:10px 14px;
-  border-radius:14px;
   margin-bottom:10px;
+  padding:10px 14px;
+  border-radius:16px;
   font-size:14px;
-  line-height:1.4;
 }
-.left{
-  background:#1f1f1f;
-  align-self:flex-start;
-  border-bottom-left-radius:4px;
-}
-.right{
+.me{
   background:#e50914;
-  align-self:flex-end;
-  border-bottom-right-radius:4px;
+  margin-left:auto;
+}
+.other{
+  background:#1f1f1f;
 }
 
 /* INPUT */
-.input-bar{
-  height:56px;
-  background:#141414;
+.input{
   display:flex;
-  align-items:center;
-  padding:0 10px;
+  padding:10px;
   border-top:1px solid #1f1f1f;
 }
-.input-bar input{
+.input input{
   flex:1;
   padding:12px;
-  border-radius:20px;
+  background:#141414;
   border:none;
-  outline:none;
-  background:#1f1f1f;
   color:#fff;
+  border-radius:20px;
 }
-.send{
-  margin-left:10px;
-  font-size:20px;
-  cursor:pointer;
+.input button{
+  margin-left:8px;
+  padding:0 18px;
+  border:none;
+  background:#e50914;
+  color:#fff;
+  border-radius:20px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
-<div class="header">
-  <div class="back" onclick="history.back()">⬅️</div>
-  <img src="https://i.pravatar.cc/150?img=32">
-  <div class="name">Mère Annette</div>
+<div class="top">
+  <div class="back" onclick="history.back()">←</div>
+  <div class="name" id="chatName">Discussion</div>
 </div>
 
-<!-- CHAT -->
-<div class="chat">
-  <div class="msg left">Bonjour mon fils</div>
-  <div class="msg right">Bonjour maman 🙏</div>
-  <div class="msg left">Voici le lien comme promis</div>
+<div id="messages"></div>
+
+<div class="input">
+  <input id="text" placeholder="Message…">
+  <button onclick="send()">➤</button>
 </div>
 
-<!-- INPUT -->
-<div class="input-bar">
-  <input type="text" placeholder="Écrire un message">
-  <div class="send">➤</div>
-</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { 
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp,
+  query,
+  orderBy,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+/* FIREBASE */
+const firebaseConfig = {
+  apiKey: "AIzaSyCAsEnTrE0EvR0ZwbS_YpF3a4Ph3S3VHZQ",
+  authDomain: "paf-x-56f2d.firebaseapp.com",
+  projectId: "paf-x-56f2d",
+  storageBucket: "paf-x-56f2d.firebasestorage.app",
+  messagingSenderId: "1023059500240",
+  appId: "1:1023059500240:web:9d3a646b52f510cbd512d5"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+/* CHAT ID (temporaire pour test) */
+const chatId = "general";
+
+/* AUTH */
+let currentUser=null;
+onAuthStateChanged(auth,(u)=>{
+  if(!u) location.href="index.html";
+  currentUser=u;
+  loadMessages();
+});
+
+/* LOAD MESSAGES */
+function loadMessages(){
+  const q = query(
+    collection(db,"chats",chatId,"messages"),
+    orderBy("createdAt")
+  );
+
+  onSnapshot(q,(snap)=>{
+    messages.innerHTML="";
+    snap.forEach(d=>{
+      const m=d.data();
+      const div=document.createElement("div");
+      div.className="msg "+(m.sender===currentUser.email?"me":"other");
+      div.textContent=m.text;
+      messages.appendChild(div);
+      messages.scrollTop=messages.scrollHeight;
+    });
+  });
+}
+
+/* SEND */
+window.send=async()=>{
+  if(!text.value.trim()) return;
+
+  await addDoc(collection(db,"chats",chatId,"messages"),{
+    text:text.value,
+    sender:currentUser.email,
+    createdAt:serverTimestamp()
+  });
+  text.value="";
+};
+</script>
 
 </body>
 </html>
