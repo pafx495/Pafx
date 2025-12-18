@@ -47,18 +47,9 @@ body{
   margin:30px auto 20px;
 }
 
-h1{
-  text-align:center;
-  font-size:22px;
-  margin-bottom:8px;
-}
-p{
-  text-align:center;
-  font-size:14px;
-  color:#aaa;
-}
+h1{text-align:center;font-size:22px}
+p{text-align:center;color:#aaa;font-size:14px}
 
-/* FORM */
 label{
   display:block;
   margin-top:18px;
@@ -73,9 +64,7 @@ select,input{
   border:1px solid #222;
   border-radius:8px;
   color:#fff;
-  font-size:15px;
 }
-input::placeholder{color:#777}
 
 button{
   width:100%;
@@ -88,14 +77,12 @@ button{
   font-size:16px;
 }
 
-/* STEPS */
 .step{display:none}
 .step.active{display:block}
 
 .info{
-  margin-top:20px;
   text-align:center;
-  font-size:13px;
+  margin-top:20px;
   color:#aaa;
 }
 </style>
@@ -105,59 +92,73 @@ button{
 
 <!-- SPLASH -->
 <div id="splash">
-  <img src="logo.png" alt="PAF X">
+  <img src="logo.png">
 </div>
 
 <!-- APP -->
 <div id="app">
 
-  <img src="logo.png" class="logo">
+<img src="logo.png" class="logo">
 
-  <!-- STEP 1 -->
-  <div class="step active" id="step1">
-    <h1>Votre numéro</h1>
-    <p>Sélectionnez votre pays et votre numéro</p>
+<!-- STEP 1 -->
+<div class="step active" id="step1">
+  <h1>Votre numéro</h1>
+  <p>Sélectionnez votre pays</p>
 
-    <label>Pays</label>
-    <select id="country"></select>
+  <label>Pays</label>
+  <select id="country"></select>
 
-    <label>Numéro de téléphone</label>
-    <div style="display:flex;gap:10px">
-      <input id="dial" readonly style="width:30%;text-align:center">
-      <input id="phone" placeholder="Numéro de téléphone" style="width:70%">
-    </div>
-
-    <button onclick="goStep2()">Suivant</button>
+  <label>Numéro</label>
+  <div style="display:flex;gap:10px">
+    <input id="dial" readonly style="width:30%;text-align:center">
+    <input id="phone" style="width:70%" placeholder="Numéro">
   </div>
 
-  <!-- STEP 2 -->
-  <div class="step" id="step2">
-    <h1>Adresse e-mail</h1>
-    <p>Un lien sécurisé vous sera envoyé</p>
+  <button onclick="next(2)">Suivant</button>
+</div>
 
-    <label>Email</label>
-    <input id="email" type="email" placeholder="exemple@email.com">
+<!-- STEP 2 -->
+<div class="step" id="step2">
+  <h1>Votre nom</h1>
+  <input id="nom" placeholder="Nom">
+  <button onclick="next(3)">Suivant</button>
+</div>
 
-    <button onclick="sendLink()">Continuer</button>
+<!-- STEP 3 -->
+<div class="step" id="step3">
+  <h1>Votre prénom</h1>
+  <input id="prenom" placeholder="Prénom">
+  <button onclick="next(4)">Suivant</button>
+</div>
+
+<!-- STEP 4 -->
+<div class="step" id="step4">
+  <h1>Date de naissance</h1>
+  <input id="dob" type="date">
+  <button onclick="next(5)">Suivant</button>
+</div>
+
+<!-- STEP 5 -->
+<div class="step" id="step5">
+  <h1>Email</h1>
+  <p>Un lien sécurisé sera envoyé</p>
+  <input id="email" type="email" placeholder="email@example.com">
+  <button onclick="sendLink()">Continuer</button>
+</div>
+
+<!-- STEP 6 -->
+<div class="step" id="step6">
+  <h1>Vérification</h1>
+  <p>Vérifiez votre email</p>
+  <div class="info">
+    Après validation, vous serez redirigé automatiquement.
   </div>
-
-  <!-- STEP 3 -->
-  <div class="step" id="step3">
-    <h1>Vérification</h1>
-    <p>Consultez votre email pour continuer</p>
-
-    <div class="info">
-      Numéro enregistré ✔️<br>
-      Email sécurisé ✔️
-    </div>
-  </div>
+</div>
 
 </div>
 
-<!-- PAYS -->
 <script src="countries.js"></script>
 
-<!-- FIREBASE + LOGIC -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import { 
@@ -170,10 +171,11 @@ import {
 import { 
   getFirestore,
   doc,
-  setDoc
+  setDoc,
+  updateDoc
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
-/* CONFIG */
+/* FIREBASE */
 const firebaseConfig = {
   apiKey: "AIzaSyCAsEnTrE0EvR0ZwbS_YpF3a4Ph3S3VHZQ",
   authDomain: "paf-x-56f2d.firebaseapp.com",
@@ -183,86 +185,65 @@ const firebaseConfig = {
   appId: "1:1023059500240:web:9d3a646b52f510cbd512d5"
 };
 
-/* INIT */
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* SESSION PERSISTANTE */
 setPersistence(auth, browserLocalPersistence);
 
-/* AUTO REDIRECT SI CONNECTÉ */
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    window.location.href = "home.html";
+/* AUTO REDIRECT */
+onAuthStateChanged(auth, async (user) => {
+  if (user && user.emailVerified) {
+    await updateDoc(doc(db,"users",user.email),{
+      emailVerified:true
+    });
+    window.location.href="home.html";
   }
 });
 
 /* SPLASH */
 setTimeout(()=>{
-  document.getElementById("splash").style.display="none";
-  document.getElementById("app").style.display="block";
+  splash.style.display="none";
+  app.style.display="block";
 },2000);
 
-/* PAYS */
-const countrySelect = document.getElementById("country");
-const dialInput = document.getElementById("dial");
-const phoneInput = document.getElementById("phone");
-
-countries.forEach(c=>{
-  const opt=document.createElement("option");
-  opt.value=c.code;
-  opt.textContent=`${c.flag} ${c.name}`;
-  if(c.code==="+237") opt.selected=true;
-  countrySelect.appendChild(opt);
-});
-dialInput.value="+237";
-
-countrySelect.addEventListener("change",()=>{
-  dialInput.value=countrySelect.value;
-});
-
 /* STEPS */
-function showStep(n){
+window.next=(n)=>{
   document.querySelectorAll(".step").forEach(s=>s.classList.remove("active"));
   document.getElementById("step"+n).classList.add("active");
-}
-
-window.goStep2=()=>{
-  if(phoneInput.value.length<6){
-    alert("Numéro invalide");
-    return;
-  }
-  window.fullPhone=dialInput.value+phoneInput.value;
-  showStep(2);
 };
 
+/* COUNTRIES */
+dial.value="+237";
+countries.forEach(c=>{
+  const o=document.createElement("option");
+  o.value=c.code;
+  o.textContent=`${c.flag} ${c.name}`;
+  if(c.code==="+237") o.selected=true;
+  country.appendChild(o);
+});
+country.onchange=()=>dial.value=country.value;
+
 /* EMAIL LINK */
-window.sendLink=()=>{
-  const email=document.getElementById("email").value;
-  if(!email.includes("@")){
-    alert("Email invalide");
-    return;
-  }
+window.sendLink=async()=>{
+  const email=emailInput.value;
 
-  const actionCodeSettings={
-    url:"https://pafx495.github.io/Pafx/home.html",
+  await setDoc(doc(db,"users",email),{
+    phone:dial.value+phone.value,
+    nom:nom.value,
+    prenom:prenom.value,
+    naissance:dob.value,
+    email,
+    emailVerified:false,
+    createdAt:new Date()
+  });
+
+  await sendSignInLinkToEmail(auth,email,{
+    url:"https://pafx495.github.io/Pafx/index.html",
     handleCodeInApp:true
-  };
+  });
 
-  sendSignInLinkToEmail(auth,email,actionCodeSettings)
-    .then(()=>{
-      localStorage.setItem("emailForSignIn",email);
-
-      setDoc(doc(db,"users",email),{
-        phone:window.fullPhone,
-        email:email,
-        createdAt:new Date()
-      });
-
-      showStep(3);
-    })
-    .catch(err=>alert(err.message));
+  next(6);
 };
 </script>
 
